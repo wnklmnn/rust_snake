@@ -125,10 +125,10 @@ struct Snake {
 
 fn create_rect(point: (u8, u8), size: (f64, f64)) -> piston_window::types::Rectangle {
     rectangle::rectangle_by_corners(
-        (f64::from(point.0) * size.0).into(),
-        (f64::from(point.1) * size.1).into(),
-        ((f64::from(point.0) * size.0) + size.0).into(),
-        ((f64::from(point.1) * size.1) + size.1).into(),
+        (f64::from(point.0) * size.0),
+        (f64::from(point.1) * size.1),
+        ((f64::from(point.0) * size.0) + size.0),
+        ((f64::from(point.1) * size.1) + size.1),
     )
 }
 
@@ -164,9 +164,9 @@ fn main() {
                 window.draw_2d(&event, |_context, _g2d, _device| {
                     let vp = ren_args.viewport();
                     let box_width: f64 =
-                        (f64::from(vp.draw_size[0]) / f64::from(g.field_size.0 + 1)).into();
+                        (f64::from(vp.draw_size[0]) / f64::from(g.field_size.0 + 1));
                     let box_height: f64 =
-                        (f64::from(vp.draw_size[1]) / f64::from(g.field_size.1 + 1)).into();
+                        (f64::from(vp.draw_size[1]) / f64::from(g.field_size.1 + 1));
                     clear([1., 1., 1., 1.], _g2d);
 
                     let food_rect = create_rect(
