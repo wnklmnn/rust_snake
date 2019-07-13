@@ -1,10 +1,10 @@
 #![allow(unused)]
 #![warn(rust_2018_idioms)]
 
-use rand::Rng;
 use piston_window::{
     clear, rectangle, EventLoop, Key, PressEvent, RenderArgs, RenderEvent, UpdateEvent,
 };
+use rand::Rng;
 
 #[derive(Debug)]
 struct GameStateRunning {
@@ -13,7 +13,7 @@ struct GameStateRunning {
     field_size: (u8, u8),
     food_pos: (u8, u8),
 }
-impl GameStateRunning{
+impl GameStateRunning {
     fn new() -> Self {
         let field_size = (20, 20);
         let snake = Snake {
@@ -22,7 +22,10 @@ impl GameStateRunning{
             tail: std::collections::VecDeque::new(),
         };
         let mut rng = rand::thread_rng();
-        let food_pos = (rng.gen_range(0, field_size.0 +1), rng.gen_range(0, field_size.1 +1));
+        let food_pos = (
+            rng.gen_range(0, field_size.0 + 1),
+            rng.gen_range(0, field_size.1 + 1),
+        );
         Self {
             rng,
             snake,
@@ -100,7 +103,10 @@ impl GameStateRunning{
             return None;
         }
         if self.snake.head_pos == self.food_pos {
-            let new_food_pos = (self.rng.gen_range(0, self.field_size.0 +1), self.rng.gen_range(0, self.field_size.1 +1));
+            let new_food_pos = (
+                self.rng.gen_range(0, self.field_size.0 + 1),
+                self.rng.gen_range(0, self.field_size.1 + 1),
+            );
             self.food_pos = new_food_pos;
         } else {
             self.snake.tail.pop_back();
@@ -145,7 +151,7 @@ fn main() {
                     Key::Up if g.snake.moving_direction != Direction::Down => {
                         g.change_direction(Direction::Up);
                     }
-                    Key::Down if g.snake.moving_direction != Direction::Up=> {
+                    Key::Down if g.snake.moving_direction != Direction::Up => {
                         g.change_direction(Direction::Down);
                     }
                     Key::Left if g.snake.moving_direction != Direction::Right => {
@@ -169,10 +175,8 @@ fn main() {
                         (f64::from(vp.draw_size[1]) / f64::from(g.field_size.1 + 1));
                     clear([1., 1., 1., 1.], _g2d);
 
-                    let food_rect = create_rect(
-                        (g.food_pos.0, g.food_pos.1),
-                        (box_width, box_height),
-                    );
+                    let food_rect =
+                        create_rect((g.food_pos.0, g.food_pos.1), (box_width, box_height));
                     piston_window::rectangle([0., 1., 0., 1.], food_rect, _context.transform, _g2d);
 
                     let head_rect = create_rect(
