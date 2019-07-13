@@ -3,27 +3,31 @@
 
 use piston_window::clear;
 
-struct GameState {
+#[derive(Debug)]
+struct GameStateRunning {
     snake: Snake,
     field_size: (u8, u8),
     food_pos: (u8, u8),
 }
-impl GameState {
+impl GameStateRunning {
     fn new() -> Self {
-        let field_size = (20, 20);
+        let field_size = (3, 20);
         let snake = Snake {
             moving_direction: Direction::Right,
             head_pos: (0, 0),
-            tail: Vec::new(),
+            tail: std::collections::VecDeque::new(),
         };
-        GameState {
+        Self {
             snake,
             field_size,
-            food_pos: (5, 5),
+            food_pos: (2, 0),
         }
     }
-    fn tick(&mut self) {
-        let next_head_pos: Option<(u8, u8)> = match self.snake.moving_direction {
+    fn change_direction(&mut self, direction: Direction) {
+        self.snake.moving_direction = direction;
+    }
+    fn tick(mut self) -> Option<GameStateRunning> {
+        let mut next_head_pos: Option<(u8, u8)> = match self.snake.moving_direction {
             Direction::Down => {
                 let ret;
                 let y = self.snake.head_pos.1.checked_add(1);
@@ -73,22 +77,46 @@ impl GameState {
                 ret
             }
         };
+        if let Some(pos) = next_head_pos {
+            // Der Kopf befeindet sich noch im Spielfeld
+            if self.snake.tail.contains(&pos) {
+                // Der Kopf hat eine Teil des Körpers berührt
+                return None;
+            }
+            self.snake.tail.push_front(self.snake.head_pos);
+            self.snake.head_pos = pos;
+        } else {
+            return None;
+        }
+        if self.snake.head_pos == self.food_pos {
+            self.food_pos = (0, 0);
+        } else {
+            self.snake.tail.pop_back();
+        }
+
+        Some(self)
     }
 }
-
+#[derive(Debug)]
 enum Direction {
     Up,
     Down,
     Left,
     Right,
 }
-
+#[derive(Debug)]
 struct Snake {
     pub moving_direction: Direction,
     pub head_pos: (u8, u8),
-    pub tail: Vec<(Direction, u8)>,
+    pub tail: std::collections::VecDeque<(u8, u8)>,
 }
 
 fn main() {
-    let game = GameState::new();
+    let mut game = GameStateRunning::new();
+    while let Some(gs) = game.tick() {
+        dbg!(&gs);
+        eprintln!("Tick");
+        game = gs;
+    }
+    eprintln!("Done");
 }
