@@ -20,7 +20,7 @@ fn create_rect(point: (u8, u8), size: (f64, f64)) -> piston_window::types::Recta
 fn main() {
     let mut game = Some(GameStateRunning::new());
     let mut win_settings = piston_window::WindowSettings::new("MySnake", (200, 200));
-    win_settings.set_resizable(false);
+    win_settings.set_resizable(true);
     win_settings.set_exit_on_esc(true);
     let mut window: piston_window::PistonWindow = win_settings.build().unwrap();
     window.set_ups(10);

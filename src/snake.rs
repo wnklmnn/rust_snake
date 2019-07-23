@@ -28,7 +28,7 @@ impl GameStateRunning {
         }
     }
 
-    pub fn get_snake_tail(&self) -> std::collections::vec_deque::Iter<'_, (u8, u8)> {
+    pub fn get_snake_tail(&self) -> impl std::iter::Iterator<Item = &(u8, u8)> {
         self.snake.tail.iter()
     }
 
@@ -113,17 +113,17 @@ impl GameStateRunning {
             }
         };
         if let Some(pos) = next_head_pos {
-            // Der Kopf befeindet sich noch im Spielfeld
+            // Snakes head is still on the field.
             if self.snake.tail.contains(&pos) {
-                // Der Kopf hat eine Teil des Körpers berührt
-                eprintln!("Kopf hat den Körper berührt");
+                // The touched the body
+                eprintln!("Head touched the body");
                 dbg!(&self);
                 return None;
             }
             self.snake.tail.push_front(self.snake.head_pos);
             self.snake.head_pos = pos;
         } else {
-            eprintln!("Kopf befindet sich außerhalb des Spielfelds");
+            eprintln!("Head is poistioned outside the field");
             dbg!(&self);
             return None;
         }
