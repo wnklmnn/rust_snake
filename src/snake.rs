@@ -17,8 +17,8 @@ impl GameStateRunning {
         };
         let mut rng = rand::thread_rng();
         let food_pos = (
-            rng.gen_range(0, field_size.0 + 1),
-            rng.gen_range(0, field_size.1 + 1),
+            rng.gen_range(0..=field_size.0),
+            rng.gen_range(0..=field_size.1),
         );
         Self {
             rng,
@@ -129,8 +129,8 @@ impl GameStateRunning {
         }
         if self.snake.head_pos == self.food_pos {
             let new_food_pos = (
-                self.rng.gen_range(0, self.field_size.0 + 1),
-                self.rng.gen_range(0, self.field_size.1 + 1),
+                self.rng.gen_range(0..=self.field_size.0 ),
+                self.rng.gen_range(0..=self.field_size.1),
             );
             self.food_pos = new_food_pos;
         } else {
